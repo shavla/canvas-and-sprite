@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>canvas and sprite</title>
+  <link rel="stylesheet" href="./src/style.css">
+</head>
+
+<body>
+  <div class="main">
+    <div class="error-dialog">
+      All files are not added or something went wrong
+    </div>
+    <div class="tools-container">
+      <div class="canvas-creator">
+        <div class="title">Canvas</div>
+        <div class="properties">
+          <div>
+            <label for="canvas-width">W:</label>
+            <input id="canvas-width" type="number">
+          </div>
+          <div>
+            <label for="canvas-height">H:</label>
+            <input id="canvas-height" type="number">
+          </div>
+          <div>
+            <label for="canvas-color">Color:</label>
+            <input type="color" id="canvas-color">
+          </div>
+        </div>
+      </div>
+      <div class="sprite-creator-container">
+        <div class="button add-button">Add Sprite</div>
+        <div class="sprite-creators">
+        </div>
+      </div>
+
+      <div class="run-button-container">
+        <div class="button run-button">Run</div>
+        <div class="button code-button">Code</div>
+      </div>
+    </div>
+    <div class="dragbar"></div>
+    <div class="canvas-container"></div>
+    <div class="code-container">
+      <div class="code">
+        <div class="static-code">
+          <strong>Static layout :</strong>
+          <div class="static-code-snippets">
+          </div>
+        </div>
+        <div class="relative-code">
+          <strong>Relative layout :</strong>
+          <div class="relative-code-snippets">
+          </div>
+        </div>
+        <div class="button close-button">Close</div>
+      </div>
+    </div>
+  </div>
+  <script type="module" src="/src/main.ts"></script>
+</body>
+
+</html>

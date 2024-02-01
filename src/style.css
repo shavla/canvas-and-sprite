@@ -1,0 +1,241 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  background: #e7e9eb;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.main {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dragbar {
+  width: 10px;
+  height: 98%;
+  background: #0A1D56;
+  opacity: 0;
+  cursor: col-resize;
+}
+
+.tools-container {
+  width: 30%;
+  padding: 20px;
+}
+
+.canvas-container {
+  width: 68%;
+}
+
+.canvas-creator {
+  height: 19%;
+}
+
+.canvas-creator .properties {
+  margin-left: 20px;
+}
+
+.properties div {
+  margin: 10px 0;
+}
+
+.tools-container,
+.canvas-container {
+  height: 98%;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  background: #ffffff;
+}
+
+.tools-container {
+  position: relative;
+}
+
+.canvas-container {
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.run-button-container {
+  position: absolute;
+  bottom: 2%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+}
+
+.button {
+  color: #ffffff;
+  width: 100px;
+  text-align: center;
+  padding: 10px 25px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.run-button {
+  background-color: #04AA6D;
+  margin-right: 20px;
+}
+
+.code-button {
+  background-color: #046daa;
+}
+
+.code-container {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  background: #dedede96;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
+.code {
+  width: 65%;
+  height: 80%;
+  background: #ffffff;
+  border-radius: 10px;
+  position: relative;
+  padding: 20px;
+  display: flex;
+}
+
+.static-code,
+.relative-code {
+  width: 50%;
+}
+
+.close-button {
+  background: #ce3939;
+  position: absolute;
+  right: 2%;
+  top: 3%;
+}
+
+.add-button {
+  margin: 15px auto;
+  background: #0d6efd;
+  width: 125px;
+}
+
+label {
+  width: 20%;
+  display: inline-block;
+}
+
+input[type=number] {
+  width: 40%;
+  border: none;
+  background: none;
+  border: 1px solid #ced4da;
+  outline: none;
+  font-size: 17px;
+  max-width: 200px;
+  padding: 7px;
+  border-radius: 8px;
+  transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number]:focus {
+  border-color: #86b7fe;
+  outline: 0;
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, .25);
+}
+
+.sprite-creator-container {
+  height: 70%;
+}
+
+.sprite-creators {
+  height: 85%;
+  overflow-x: auto;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgb(240, 240, 240);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgb(115, 172, 238);
+  border-radius: 10px;
+}
+
+.img-selector {
+  width: 28%;
+}
+
+.sprite-creator {
+  position: relative;
+  margin: 30px 0;
+}
+
+.sprite-creator div {
+  margin: 10px 0;
+}
+
+.sprite-creator div:not(:nth-child(2)) {
+  margin-left: 20px;
+}
+
+.delete-sprite-button {
+  width: 30px;
+  height: 22px;
+  background: #ed4405;
+  text-align: center;
+  margin: 0 !important;
+  position: absolute;
+  top: 0;
+  right: 2%;
+  cursor: pointer;
+  color: #fff;
+  border-radius: 5px;
+}
+
+.error-dialog {
+  position: absolute;
+  background: white;
+  top: 10%;
+  color: red;
+  box-shadow: 0px 0px 9px 4px #0000004d;
+  padding: 30px;
+  right: 5%;
+  opacity: 0;
+  transition: opacity 0.8s;
+}
+
+.static-code-snippets,
+.relative-code-snippets {
+  margin: 10px;
+  height: 90%;
+  overflow: auto;
+}
+
+.static-code-snippet div:not(:first-child):not(:last-child),
+.relative-code-snippet div:not(:first-child):not(:last-child) {
+  margin-left: 30px;
+}
