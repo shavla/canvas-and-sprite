@@ -2,7 +2,7 @@ export class Tools {
     private canvasWidthInput: HTMLInputElement = document.querySelector("#canvas-width") as HTMLInputElement;
     private canvasHeightInput: HTMLInputElement = document.querySelector("#canvas-height") as HTMLInputElement;
     private canvasColorInput: HTMLInputElement = document.querySelector("#canvas-color") as HTMLInputElement;
-    private errorDialog: HTMLElement = document.querySelector(".error-dialog") as HTMLElement;
+    private errorDialog: HTMLElement = document.querySelector(".error-popup") as HTMLElement;
 
     private allFilesAmount: number = 0;
     private currentLoadedFilesAmount: number = 0;
@@ -12,9 +12,14 @@ export class Tools {
     constructor() {
     }
 
-    getInfo(callback: (info: Layout) => void): void {
+    getInfo(callback: (info: Layout) => void, zeroSpriteCallback: (info: CanvasLayout) => void): void {
         this.callBack = callback;
         this.spriteLayouts = this.createSpriteLayouts();
+
+        if (this.spriteLayouts.length == 0) {
+            zeroSpriteCallback(this.getCanvasDimensions());
+            return;
+        }
 
         if (this.spriteLayouts.every(layout => layout.src)) {
             this.allFilesAmount = this.spriteLayouts.length;
@@ -59,14 +64,19 @@ export class Tools {
         if (this.currentLoadedFilesAmount == this.allFilesAmount) {
             this.currentLoadedFilesAmount = 0;
             this.callBack({
-                canvas: {
-                    width: +this.canvasWidthInput.value,
-                    height: +this.canvasHeightInput.value,
-                    color: this.canvasColorInput.value
-                },
+                canvas: this.getCanvasDimensions(),
                 sprites: this.spriteLayouts
             });
         }
+    }
+
+    private getCanvasDimensions(): CanvasLayout {
+        let canvas: CanvasLayout = {
+            width: +this.canvasWidthInput.value,
+            height: +this.canvasHeightInput.value,
+            color: this.canvasColorInput.value
+        }
+        return canvas;
     }
 }
 

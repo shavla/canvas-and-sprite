@@ -8,7 +8,7 @@ body {
   width: 100%;
   height: 100vh;
   overflow: hidden;
-  background: #0080ff;
+  background: #e7e9eb;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
@@ -91,6 +91,16 @@ body {
 
 .code-button {
   background-color: #046daa;
+}
+
+.copy-button {
+  width: 120px;
+  background: #046daa;
+  transition: all 0.4s;
+}
+
+.copied {
+  background: #04AA6D;
 }
 
 .code-container {
@@ -216,7 +226,7 @@ input[type=number]:focus {
   border-radius: 5px;
 }
 
-.error-dialog {
+.error-popup {
   position: absolute;
   background: white;
   top: 10%;
@@ -231,7 +241,7 @@ input[type=number]:focus {
 .static-code-snippets,
 .relative-code-snippets {
   margin: 10px;
-  height: 90%;
+  height: 88%;
   overflow: auto;
 }
 

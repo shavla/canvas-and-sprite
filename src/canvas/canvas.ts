@@ -20,6 +20,7 @@ export class Canvas {
     }
 
     createCanvas(layout: CanvasLayout) {
+        this.deleteOldSprites();
         let width = this.htmlContainer.clientWidth;
         let height = this.htmlContainer.clientHeight;
         if (layout.width > width || layout.height > height) {
