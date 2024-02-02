@@ -121,8 +121,8 @@ body {
 .close-button {
   background: #ce3939;
   position: absolute;
-  right: 2%;
-  top: 3%;
+  right: 20px;
+  top: 20px;
 }
 
 .add-button {
