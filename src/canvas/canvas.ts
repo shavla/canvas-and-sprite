@@ -14,7 +14,7 @@ export class Canvas {
             width: 0,
             height: 0,
         });
-        
+
         this.pixiApp.stage.sortableChildren = true;
         this.htmlContainer.append(this.pixiApp.view as unknown as Node);
         this.pixiApp.stage.eventMode = "static";

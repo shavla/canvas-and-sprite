@@ -27,7 +27,7 @@ export class CodeDialog {
             let alphaDiv = this.createDivWithText("alpha", +info.alpha.toFixed(2));
             let positionDiv = this.createDivWithText("position", `new PIXI.Point(${+info.position.x.toFixed(2)}, ${+info.position.y.toFixed(2)})`);
             let anchorDiv = this.createDivWithText("anchor", `new PIXI.Point(${info.anchor})`);
-            let scaleDiv = this.createDivWithText("scale", info.scale);
+            let scaleDiv = this.createDivWithText("scale", +info.scale.toFixed(2));
             let [title, footer] = this.createSnipetTitleAndFooter(i + 1);
 
             this.appendChildernToSnippet(codeContainer, [title, widthDiv, heightDiv, alphaDiv, zIndexDiv, positionDiv, anchorDiv, scaleDiv, footer]);
@@ -48,7 +48,7 @@ export class CodeDialog {
             let alphaDiv = this.createDivWithText("alpha", info.alpha);
             let positionDiv = this.createDivWithText("position", `new PIXI.Point(canvasWidth * ${+(info.position.x / info.parentWidth).toFixed(2)}, canvasHeight * ${(info.position.y / info.parentHeight).toFixed(2)})`);
             let anchorDiv = this.createDivWithText("anchor", `new PIXI.Point(${info.anchor})`);
-            let scaleDiv = this.createDivWithText("scale", info.scale);
+            let scaleDiv = this.createDivWithText("scale", +info.scale.toFixed(2));
             let [title, footer] = this.createSnipetTitleAndFooter(i + 1);
 
             this.appendChildernToSnippet(codeContainer, [title, widthDiv, heightDiv, alphaDiv, zIndexDiv, positionDiv, anchorDiv, scaleDiv, footer]);
