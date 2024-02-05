@@ -14,9 +14,12 @@ export class Canvas {
             width: 0,
             height: 0,
         });
+        
         this.pixiApp.stage.sortableChildren = true;
-        this.pixiApp.ticker.speed = 2;
         this.htmlContainer.append(this.pixiApp.view as unknown as Node);
+        this.pixiApp.stage.eventMode = "static";
+        this.pixiApp.stage.on("pointerup", this.onDragEnd, this);
+        this.pixiApp.stage.on("pointerupoutside", this.onDragEnd, this);
     }
 
     createCanvas(layout: CanvasLayout) {
@@ -44,7 +47,7 @@ export class Canvas {
             const sprite = new PIXI.Sprite(PIXI.Texture.from(layout.src as PIXI.TextureSource));
             this.setFlipsToSprite(layout.flipX, layout.flipY, sprite);
             this.setDimensionsToSprite(layout.width, layout.height, layout.zindex, layout.alpha, sprite);
-            this.addListenersToSprite(sprite);
+            this.addListenerToSprite(sprite);
             this.pixiApp.stage.addChild(sprite);
             this.oldSprites.push(sprite);
         }
@@ -94,12 +97,9 @@ export class Canvas {
         sprite.scale.set(flipX, flipY);
     }
 
-    private addListenersToSprite(sprite: PIXI.Sprite) {
+    private addListenerToSprite(sprite: PIXI.Sprite) {
         sprite.eventMode = "static";
         sprite.on('pointerdown', this.onDragStart, this);
-        sprite.on('pointermove', this.onDragMove, this);
-        sprite.on('pointerup', this.onDragEnd, this);
-        sprite.on('pointerupoutside', this.onDragEnd, this);
     }
 
     private onDragMove(event: PIXI.FederatedPointerEvent): void {
@@ -111,14 +111,17 @@ export class Canvas {
     private onDragStart(event: PIXI.FederatedPointerEvent): void {
         this.isDragging = true;
         this.dragTarget = event.target as PIXI.Sprite;
+        this.pixiApp.stage.on("pointermove", this.onDragMove, this);
     }
 
     private onDragEnd(): void {
+        this.pixiApp.stage.off("pointermove", this.onDragMove, this);
         this.isDragging = false;
     }
 
     private setCanvasDimensions(width: number, height: number) {
         this.pixiApp.renderer.resize(width, height);
+        this.pixiApp.stage.hitArea = this.pixiApp.screen;
     }
 }
 
