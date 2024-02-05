@@ -249,3 +249,19 @@ input[type=number]:focus {
 .relative-code-snippet div:not(:first-child):not(:last-child) {
   margin-left: 30px;
 }
+
+fieldset {
+  display: flex;
+  justify-content: space-evenly;
+  margin-right: 20px;
+}
+
+legend {
+  padding: 0 10px;
+  margin-left: 10px;
+}
+
+fieldset input {
+  margin-left: 10px;
+  cursor: pointer;
+}

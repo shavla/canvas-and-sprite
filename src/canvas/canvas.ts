@@ -58,8 +58,8 @@ export class Canvas {
         for (let i = 0; i < this.oldSprites.length; i++) {
             let sprite = this.oldSprites[i];
             result.push({
-                width: sprite.width,
-                height: sprite.height,
+                width: sprite.scale.x > 0 ? sprite.width : -sprite.width,
+                height: sprite.scale.y > 0 ? sprite.height : -sprite.height,
                 parentWidth: this.pixiApp.renderer.width,
                 parentHeight: this.pixiApp.renderer.height,
                 position: sprite.position,
@@ -93,8 +93,13 @@ export class Canvas {
         sprite.position.set(width / 2, height / 2);
     }
 
-    private setFlipsToSprite(flipX: number, flipY: number, sprite: PIXI.Sprite) {
-        sprite.scale.set(flipX, flipY);
+    private setFlipsToSprite(flipX: boolean, flipY: boolean, sprite: PIXI.Sprite) {
+        if (flipX) {
+            sprite.width = -1;
+        }
+        if (flipY) {
+            sprite.height = -1;
+        }
     }
 
     private addListenerToSprite(sprite: PIXI.Sprite) {
@@ -123,16 +128,6 @@ export class Canvas {
         this.pixiApp.renderer.resize(width, height);
         this.pixiApp.stage.hitArea = this.pixiApp.screen;
     }
-}
-
-export type SpriteStaticLayout = {
-    position: PIXI.Point,
-    width: number,
-    height: number,
-    anchor: number,
-    zIndex: number,
-    scale: number,
-    alpha: number
 }
 
 export type SpriteLayout = {

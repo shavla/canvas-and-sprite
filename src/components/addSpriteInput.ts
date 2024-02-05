@@ -17,14 +17,13 @@ export class AddSpriteInput {
         let propZindexInput = this.createInputWithLabel("zIndex", "Zindex :");
         let propOpacityInput = this.createInputWithLabel("opacity", "Alpha :");
 
-        let propFlipXInput = this.createFlipInput("flipX", "FlipX :");
-        let propFlipYInput = this.createFlipInput("flipY", "FlipY :");
+        let propFlipInput = this.createFlipInputs()
         let deleteButton = this.createDeleteButton();
 
         let container = document.createElement("div");
         container.classList.add("sprite-creator");
 
-        this.appendChildernToCreator(container, [deleteButton, imgUploader, propWidthInput, propHeightInput, propZindexInput, propOpacityInput, propFlipXInput, propFlipYInput]);
+        this.appendChildernToCreator(container, [deleteButton, imgUploader, propWidthInput, propHeightInput, propZindexInput, propOpacityInput, propFlipInput]);
         this.spriteCreatorContainer.appendChild(container);
     }
 
@@ -49,6 +48,22 @@ export class AddSpriteInput {
             <label for="img-${idName}-${this.spriteQuantity}">${text}</label>
             <input type="number" id="img-${idName}-${this.spriteQuantity}" class="property-${idName}">
         `
+        return div;
+    }
+
+    private createFlipInputs(): HTMLDivElement {
+        let div = document.createElement("div");
+        div.innerHTML = `<fieldset>
+        <legend>Flip:</legend>
+        <div>
+          <label for="flepX-${this.spriteQuantity}">X:</label>
+          <input type="checkbox" id="flepX-${this.spriteQuantity}" class="property-flipX"/>
+        </div>
+        <div>
+          <label for="flepY-${this.spriteQuantity}">Y:</label>
+          <input type="checkbox" id="flepY-${this.spriteQuantity}" class="property-flipY"/>
+        </div>
+      </fieldset>`;
         return div;
     }
 

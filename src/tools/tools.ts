@@ -51,8 +51,8 @@ export class Tools {
                 height: +(creator.querySelector(".property-height") as HTMLInputElement).value,
                 zindex: +(creator.querySelector(".property-zIndex") as HTMLInputElement).value,
                 alpha: +(creator.querySelector(".property-opacity") as HTMLInputElement).value,
-                flipX: +(creator.querySelector(".property-flipX") as HTMLInputElement).value,
-                flipY: +(creator.querySelector(".property-flipY") as HTMLInputElement).value,
+                flipX: (creator.querySelector(".property-flipX") as HTMLInputElement).checked,
+                flipY: (creator.querySelector(".property-flipY") as HTMLInputElement).checked,
                 src: ((creator.querySelector(".property-image") as HTMLInputElement).files as FileList)[0],
             })
         });
@@ -97,6 +97,6 @@ export type SpriteCreatorLayout = {
     src: string | ArrayBuffer | null | undefined | File,
     zindex: number,
     alpha: number,
-    flipX: number,
-    flipY: number
+    flipX: boolean,
+    flipY: boolean
 }
