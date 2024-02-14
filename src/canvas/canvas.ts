@@ -1,13 +1,15 @@
 import * as PIXI from 'pixi.js';
 import { CanvasLayout, SpriteCreatorLayout } from '../tools/tools';
+import { FlipLayout, UpdateSpriteLayout } from '../components/addSpriteInput';
 
 export class Canvas {
     private pixiApp: PIXI.Application;
     private htmlContainer: HTMLElement = document.querySelector('.canvas-container') as HTMLElement;
     private ratio: number = 1;
-    private oldSprites: PIXI.Sprite[] = [];
+    private oldSprites: { id: number, sprite: PIXI.Sprite }[] = [];
     private dragTarget: PIXI.Sprite;
     private isDragging: boolean = false;
+    private spriteProperties: { id: number, sprite: PIXI.Sprite, x: number, y: number }[] = [];
 
     constructor() {
         this.pixiApp = new PIXI.Application({
@@ -49,14 +51,21 @@ export class Canvas {
             this.setDimensionsToSprite(layout.width, layout.height, layout.zindex, layout.alpha, sprite);
             this.addListenerToSprite(sprite);
             this.pixiApp.stage.addChild(sprite);
-            this.oldSprites.push(sprite);
+            let spriteIndex = this.spriteProperties.findIndex(x => x.id == layout.id);
+            if (spriteIndex == -1) {
+                this.spriteProperties.push({ id: layout.id, x: layout.width / 2, y: layout.height / 2, sprite: sprite });
+            }
+            this.spriteProperties[this.spriteProperties.findIndex(x => x.id == layout.id)].sprite = sprite;
+            console.log(sprite.position);
+            sprite.position.set(this.spriteProperties.find(x => x.id == layout.id)?.x, this.spriteProperties.find(x => x.id == layout.id)?.y);
+            this.oldSprites.push({ id: layout.id, sprite: sprite });
         }
     }
 
     getSpritesLayout(): SpriteLayout[] {
         let result: SpriteLayout[] = [];
         for (let i = 0; i < this.oldSprites.length; i++) {
-            let sprite = this.oldSprites[i];
+            let sprite = this.oldSprites[i].sprite;
             result.push({
                 width: sprite.scale.x > 0 ? sprite.width : -sprite.width,
                 height: sprite.scale.y > 0 ? sprite.height : -sprite.height,
@@ -72,9 +81,55 @@ export class Canvas {
         return result;
     }
 
+    updateSprite(info: UpdateSpriteLayout) {
+        let spriteProps = this.spriteProperties.find(x => x.id == info.id);
+        if (spriteProps) {
+            let sprite = spriteProps.sprite;
+            sprite.width = info.width * this.ratio;
+            sprite.height = info.height * this.ratio;
+            sprite.zIndex = info.zindex;
+            sprite.alpha = info.alpha;
+        }
+    }
+
+    updateSpriteFlip(info: FlipLayout) {
+        let spriteProps = this.spriteProperties.find(x => x.id == info.id);
+
+        if (spriteProps) {
+            let sprite = spriteProps.sprite;
+            if (info.flipX) {
+                if (sprite._width > 0) {
+                    sprite.width = -sprite.width;
+                }
+            } else {
+                if (sprite._width < 0) {
+                    sprite.width = -sprite.width;
+                    sprite._width = Math.abs(sprite.width);
+                }
+            }
+
+            if (info.flipY) {
+                if (sprite._height > 0) {
+                    sprite.height = -sprite.height;
+                }
+            } else {
+                if (sprite._height < 0) {
+                    sprite.height = -sprite.height;
+                    sprite._height = Math.abs(sprite.height);
+                }
+            }
+        }
+    }
+
+    deleteSprite(id: number) {
+        let spriteIndex = this.oldSprites.findIndex(x => x.id == id);
+        this.oldSprites[spriteIndex].sprite.destroy();
+        this.oldSprites.splice(spriteIndex, 1);
+    }
+
     private deleteOldSprites() {
-        this.oldSprites.forEach(sprite => {
-            sprite.destroy();
+        this.oldSprites.forEach(item => {
+            item.sprite.destroy();
         });
         this.oldSprites = [];
     }
@@ -90,6 +145,8 @@ export class Canvas {
             sprite.height = height;
         }
         sprite.anchor.set(0.5);
+        console.log(sprite.position);
+
         sprite.position.set(width / 2, height / 2);
     }
 
@@ -107,21 +164,32 @@ export class Canvas {
         sprite.on('pointerdown', this.onDragStart, this);
     }
 
-    private onDragMove(event: PIXI.FederatedPointerEvent): void {
+    private onDragMove(event: PIXI.FederatedPointerEvent) {
         if (this.isDragging) {
+            console.log(this.dragTarget.position);
+
             this.dragTarget.position.set(event.data.getLocalPosition(this.pixiApp.stage).x, event.data.getLocalPosition(this.pixiApp.stage).y);
         }
     }
 
-    private onDragStart(event: PIXI.FederatedPointerEvent): void {
+    private onDragStart(event: PIXI.FederatedPointerEvent) {
         this.isDragging = true;
         this.dragTarget = event.target as PIXI.Sprite;
         this.pixiApp.stage.on("pointermove", this.onDragMove, this);
     }
 
-    private onDragEnd(): void {
+    private onDragEnd() {
         this.pixiApp.stage.off("pointermove", this.onDragMove, this);
         this.isDragging = false;
+        this.setNewPositionsToProps();
+    }
+
+    private setNewPositionsToProps() {
+        let index = this.spriteProperties.findIndex(x => x.sprite == this.dragTarget);
+        if (index != -1) {
+            this.spriteProperties[index].x = this.dragTarget.x;
+            this.spriteProperties[index].y = this.dragTarget.y;
+        }
     }
 
     private setCanvasDimensions(width: number, height: number) {

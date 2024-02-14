@@ -28,15 +28,6 @@ body {
   cursor: col-resize;
 }
 
-.tools-container {
-  width: 30%;
-  padding: 20px;
-}
-
-.canvas-container {
-  width: 68%;
-}
-
 .canvas-creator {
   height: 19%;
 }
@@ -58,6 +49,8 @@ body {
 
 .tools-container {
   position: relative;
+  width: 30%;
+  padding: 20px;
 }
 
 .canvas-container {
@@ -65,6 +58,8 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 68%;
+  z-index: 1;
 }
 
 .run-button-container {
@@ -111,6 +106,7 @@ body {
   display: none;
   align-items: center;
   justify-content: center;
+  z-index: 3;
 }
 
 .code {
@@ -159,11 +155,11 @@ input[type=number] {
   transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
 }
 
-input::-webkit-outer-spin-button,
+/* input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
-}
+} */
 
 input[type=number]:focus {
   border-color: #86b7fe;
@@ -236,6 +232,7 @@ input[type=number]:focus {
   right: 5%;
   opacity: 0;
   transition: opacity 0.8s;
+  z-index: 0;
 }
 
 .static-code-snippets,

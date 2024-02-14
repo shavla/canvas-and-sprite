@@ -5,7 +5,14 @@ import { Dragbar } from './components/dragbar';
 import { CanvasLayout, Layout, Tools } from './tools/tools';
 
 let dragbar = new Dragbar();
-let addSpriteInput = new AddSpriteInput();
+let addSpriteInput = new AddSpriteInput((info) => {
+  canvas.updateSprite(info);
+}, (info) => {
+  canvas.updateSpriteFlip(info);
+}, (id) => {
+  canvas.deleteSprite(id);
+});
+
 let canvas = new Canvas();
 let tools = new Tools();
 let codeDialog = new CodeDialog();

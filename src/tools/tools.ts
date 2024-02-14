@@ -1,3 +1,5 @@
+import { UpdateSpriteLayout } from "../components/addSpriteInput";
+
 export class Tools {
     private canvasWidthInput: HTMLInputElement = document.querySelector("#canvas-width") as HTMLInputElement;
     private canvasHeightInput: HTMLInputElement = document.querySelector("#canvas-height") as HTMLInputElement;
@@ -16,8 +18,13 @@ export class Tools {
         this.callBack = callback;
         this.spriteLayouts = this.createSpriteLayouts();
 
+        let sizes = this.getCanvasDimensions();
+        if (sizes.width == 0 || sizes.height == 0) {
+            this.setCanvasSizesOfWindow();
+        }
+
         if (this.spriteLayouts.length == 0) {
-            zeroSpriteCallback(this.getCanvasDimensions());
+            zeroSpriteCallback(sizes);
             return;
         }
 
@@ -34,8 +41,10 @@ export class Tools {
             });
         } else {
             this.errorDialog.style.opacity = "1";
+            this.errorDialog.style.zIndex = "2";
             setTimeout(() => {
                 this.errorDialog.style.opacity = "0";
+                this.errorDialog.style.zIndex = "0";
             }, 2000);
         }
     }
@@ -47,6 +56,7 @@ export class Tools {
         spriteCreators.forEach(creator => {
             //let file = ((creator.querySelector(".property-image") as HTMLInputElement).files as FileList)[0];
             spriteLayouts.push({
+                id: +creator.id,
                 width: +(creator.querySelector(".property-width") as HTMLInputElement).value,
                 height: +(creator.querySelector(".property-height") as HTMLInputElement).value,
                 zindex: +(creator.querySelector(".property-zIndex") as HTMLInputElement).value,
@@ -78,25 +88,26 @@ export class Tools {
         }
         return canvas;
     }
+
+    private setCanvasSizesOfWindow() {
+        this.canvasWidthInput.value = `${document.querySelector('.canvas-container')?.clientWidth}`;
+        this.canvasHeightInput.value = `${document.querySelector('.canvas-container')?.clientHeight}`;
+    }
 }
 
 export type Layout = {
     canvas: CanvasLayout,
-    sprites: SpriteCreatorLayout[]
+    sprites: SpriteCreatorLayout[],
 }
 
 export type CanvasLayout = {
     width: number,
     height: number,
-    color: string
+    color: string,
 }
 
-export type SpriteCreatorLayout = {
-    width: number,
-    height: number,
+export type SpriteCreatorLayout = UpdateSpriteLayout & {
     src: string | ArrayBuffer | null | undefined | File,
-    zindex: number,
-    alpha: number,
     flipX: boolean,
     flipY: boolean
 }
