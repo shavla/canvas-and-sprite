@@ -1,3 +1,4 @@
+import { PositionUpdater } from "../canvas/canvas";
 import { UpdateSpriteLayout } from "../components/addSpriteInput";
 
 export class Tools {
@@ -49,6 +50,11 @@ export class Tools {
         }
     }
 
+    setNewPositions(info: PositionUpdater) {
+        (document.querySelector(`#img-posX-${info.id}`) as HTMLInputElement).value = info.posX.toString();
+        (document.querySelector(`#img-posY-${info.id}`) as HTMLInputElement).value = info.posY.toString();
+    }
+
     private createSpriteLayouts(): SpriteCreatorLayout[] {
         let spriteLayouts: SpriteCreatorLayout[] = [];
         let spriteCreators = document.querySelectorAll(".sprite-creator");
@@ -64,6 +70,8 @@ export class Tools {
                 flipX: (creator.querySelector(".property-flipX") as HTMLInputElement).checked,
                 flipY: (creator.querySelector(".property-flipY") as HTMLInputElement).checked,
                 src: ((creator.querySelector(".property-image") as HTMLInputElement).files as FileList)[0],
+                posX: +(creator.querySelector(".property-posX") as HTMLInputElement).value,
+                posY: +(creator.querySelector(".property-posY") as HTMLInputElement).value,
             })
         });
         return spriteLayouts;
@@ -109,5 +117,5 @@ export type CanvasLayout = {
 export type SpriteCreatorLayout = UpdateSpriteLayout & {
     src: string | ArrayBuffer | null | undefined | File,
     flipX: boolean,
-    flipY: boolean
+    flipY: boolean,
 }

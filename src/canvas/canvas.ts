@@ -7,11 +7,11 @@ export class Canvas {
     private htmlContainer: HTMLElement = document.querySelector('.canvas-container') as HTMLElement;
     private ratio: number = 1;
     private oldSprites: { id: number, sprite: PIXI.Sprite }[] = [];
-    private dragTarget: PIXI.Sprite;
+    private dragTarget: PIXI.Sprite | null;
     private isDragging: boolean = false;
     private spriteProperties: { id: number, sprite: PIXI.Sprite, x: number, y: number }[] = [];
 
-    constructor() {
+    constructor(private callback: (info: PositionUpdater) => void) {
         this.pixiApp = new PIXI.Application({
             width: 0,
             height: 0,
@@ -53,10 +53,9 @@ export class Canvas {
             this.pixiApp.stage.addChild(sprite);
             let spriteIndex = this.spriteProperties.findIndex(x => x.id == layout.id);
             if (spriteIndex == -1) {
-                this.spriteProperties.push({ id: layout.id, x: layout.width / 2, y: layout.height / 2, sprite: sprite });
+                this.spriteProperties.push({ id: layout.id, x: layout.posX ? layout.posX : layout.width / 2, y: layout.posY ? layout.posY : layout.height / 2, sprite: sprite });
             }
             this.spriteProperties[this.spriteProperties.findIndex(x => x.id == layout.id)].sprite = sprite;
-            console.log(sprite.position);
             sprite.position.set(this.spriteProperties.find(x => x.id == layout.id)?.x, this.spriteProperties.find(x => x.id == layout.id)?.y);
             this.oldSprites.push({ id: layout.id, sprite: sprite });
         }
@@ -89,6 +88,10 @@ export class Canvas {
             sprite.height = info.height * this.ratio;
             sprite.zIndex = info.zindex;
             sprite.alpha = info.alpha;
+            sprite.position.x = info.posX;
+            sprite.position.y = info.posY;
+            spriteProps.x = info.posX;
+            spriteProps.y = info.posY;
         }
     }
 
@@ -145,8 +148,6 @@ export class Canvas {
             sprite.height = height;
         }
         sprite.anchor.set(0.5);
-        console.log(sprite.position);
-
         sprite.position.set(width / 2, height / 2);
     }
 
@@ -165,10 +166,12 @@ export class Canvas {
     }
 
     private onDragMove(event: PIXI.FederatedPointerEvent) {
-        if (this.isDragging) {
-            console.log(this.dragTarget.position);
-
-            this.dragTarget.position.set(event.data.getLocalPosition(this.pixiApp.stage).x, event.data.getLocalPosition(this.pixiApp.stage).y);
+        if (this.isDragging && this.dragTarget) {
+            this.dragTarget.position.set(Math.round(event.data.getLocalPosition(this.pixiApp.stage).x), Math.round(event.data.getLocalPosition(this.pixiApp.stage).y));
+            let index = this.spriteProperties.findIndex(x => x.sprite == this.dragTarget);
+            if (index != -1) {
+                this.callback({ id: this.spriteProperties[index].id, posX: this.dragTarget.x, posY: this.dragTarget.y });
+            }
         }
     }
 
@@ -180,15 +183,18 @@ export class Canvas {
 
     private onDragEnd() {
         this.pixiApp.stage.off("pointermove", this.onDragMove, this);
-        this.isDragging = false;
         this.setNewPositionsToProps();
+        this.dragTarget = null;
+        this.isDragging = false;
     }
 
     private setNewPositionsToProps() {
         let index = this.spriteProperties.findIndex(x => x.sprite == this.dragTarget);
         if (index != -1) {
-            this.spriteProperties[index].x = this.dragTarget.x;
-            this.spriteProperties[index].y = this.dragTarget.y;
+            if (this.dragTarget) {
+                this.spriteProperties[index].x = this.dragTarget.x;
+                this.spriteProperties[index].y = this.dragTarget.y;
+            }
         }
     }
 
@@ -208,4 +214,10 @@ export type SpriteLayout = {
     zIndex: number,
     scale: number,
     alpha: number
+}
+
+export type PositionUpdater = {
+    id: number,
+    posX: number,
+    posY: number
 }

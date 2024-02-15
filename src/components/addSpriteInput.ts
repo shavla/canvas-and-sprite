@@ -14,8 +14,10 @@ export class AddSpriteInput {
         let imgUploader = this.createImgUploader();
         let propWidthInput = this.createInputWithLabel("width", "W :");
         let propHeightInput = this.createInputWithLabel("height", "H :");
-        let propZindexInput = this.createInputWithLabel("zIndex", "Zindex :", 1);
-        let propOpacityInput = this.createInputWithLabel("opacity", "Alpha :", 1);
+        let propZindexInput = this.createInputWithLabel("zIndex", "Zindex :", 2);
+        let propOpacityInput = this.createInputWithLabel("opacity", "Alpha :", 2);
+        let positionXInput = this.createInputWithLabel("posX", "X :");
+        let positionYInput = this.createInputWithLabel("posY", "Y :");
 
         let propFlipInput = this.createFlipInputs();
         let deleteButton = this.createDeleteButton(this.spriteQuantity);
@@ -24,7 +26,7 @@ export class AddSpriteInput {
         container.id = `${this.spriteQuantity}`;
         container.classList.add("sprite-creator");
 
-        this.appendChildernToCreator(container, [deleteButton, imgUploader, propWidthInput, propHeightInput, propZindexInput, propOpacityInput, propFlipInput]);
+        this.appendChildernToCreator(container, [deleteButton, imgUploader, propWidthInput, propHeightInput, positionXInput, positionYInput, propZindexInput, propOpacityInput, propFlipInput]);
         this.spriteCreatorContainer.appendChild(container);
 
         this.getAndSetImgDeminsionsToInputs(this.spriteQuantity);
@@ -50,7 +52,7 @@ export class AddSpriteInput {
         let div = document.createElement("div");
         div.innerHTML = `
             <label for="img-${idName}-${this.spriteQuantity}">${text}</label>
-            <input type="number" id="img-${idName}-${this.spriteQuantity}" class="property-${idName}" ${defaultValue ? `value=${defaultValue}` : ""}>
+            <input type="number" id="img-${idName}-${this.spriteQuantity}" class="property-${idName}" ${defaultValue ? `value=${defaultValue - 1}` : ""}>
         `
         return div;
     }
@@ -97,6 +99,10 @@ export class AddSpriteInput {
                 img.onload = () => {
                     (document.querySelector(`#img-width-${index}`) as HTMLInputElement).value = `${img.width}`;
                     (document.querySelector(`#img-height-${index}`) as HTMLInputElement).value = `${img.height}`;
+
+                    (document.querySelector(`#img-posX-${index}`) as HTMLInputElement).value = `${+(img.width / 2).toFixed(2)}`;
+                    (document.querySelector(`#img-posY-${index}`) as HTMLInputElement).value = `${+(img.height / 2).toFixed(2)}`;
+
                     URL.revokeObjectURL(objectURL);
                 }
                 img.src = objectURL;
@@ -111,11 +117,13 @@ export class AddSpriteInput {
         let alphaInput = document.querySelector(`#img-opacity-${index}`) as HTMLInputElement;
         let flipXInput = document.querySelector(`#flepX-${index}`) as HTMLInputElement;
         let flipYInput = document.querySelector(`#flepY-${index}`) as HTMLInputElement;
+        let posXInput = document.querySelector(`#img-posX-${index}`) as HTMLInputElement;
+        let posYInput = document.querySelector(`#img-posY-${index}`) as HTMLInputElement;
 
-        [widthInput, heightInput, zindexInput, alphaInput].forEach(x => {
+        [widthInput, heightInput, posXInput, posYInput, zindexInput, alphaInput].forEach(x => {
             x.addEventListener("input", () => {
                 this.callback({
-                    id: index, width: +widthInput.value, height: +heightInput.value, zindex: +zindexInput.value, alpha: +alphaInput.value
+                    id: index, width: +widthInput.value, height: +heightInput.value, zindex: +zindexInput.value, alpha: +alphaInput.value, posX: +posXInput.value, posY: +posYInput.value
                 });
             });
         });
@@ -138,6 +146,8 @@ export type UpdateSpriteLayout = {
     height: number,
     zindex: number,
     alpha: number,
+    posX: number,
+    posY: number,
 }
 
 export type FlipLayout = {

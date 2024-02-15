@@ -1,4 +1,4 @@
-import { Canvas } from './canvas/canvas';
+import { Canvas, PositionUpdater } from './canvas/canvas';
 import { AddSpriteInput } from './components/addSpriteInput';
 import { CodeDialog } from './components/codeDialog';
 import { Dragbar } from './components/dragbar';
@@ -13,8 +13,10 @@ let addSpriteInput = new AddSpriteInput((info) => {
   canvas.deleteSprite(id);
 });
 
-let canvas = new Canvas();
 let tools = new Tools();
+let canvas = new Canvas((info:PositionUpdater) => {
+  tools.setNewPositions(info);
+});
 let codeDialog = new CodeDialog();
 
 let runButton = document.querySelector(".run-button") as HTMLElement;
