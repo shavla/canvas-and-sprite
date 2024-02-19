@@ -11,16 +11,7 @@ let addSpriteInput = new AddSpriteInput((info) => {
   canvas.updateSpriteFlip(info);
 }, (id) => {
   canvas.deleteSprite(id);
-});
-
-let tools = new Tools();
-let canvas = new Canvas((info:PositionUpdater) => {
-  tools.setNewPositions(info);
-});
-let codeDialog = new CodeDialog();
-
-let runButton = document.querySelector(".run-button") as HTMLElement;
-runButton.addEventListener("click", () => {
+}, () => {
   tools.getInfo((info: Layout) => {
     canvas.createCanvas(info.canvas);
     canvas.createSprites(info.sprites);
@@ -28,6 +19,22 @@ runButton.addEventListener("click", () => {
     canvas.createCanvas(canvasLayout);
   });
 });
+
+let tools = new Tools();
+let canvas = new Canvas((info: PositionUpdater) => {
+  tools.setNewPositions(info);
+});
+let codeDialog = new CodeDialog();
+
+// let runButton = document.querySelector(".run-button") as HTMLElement;
+// runButton.addEventListener("click", () => {
+//   tools.getInfo((info: Layout) => {
+//     canvas.createCanvas(info.canvas);
+//     canvas.createSprites(info.sprites);
+//   }, (canvasLayout: CanvasLayout) => {
+//     canvas.createCanvas(canvasLayout);
+//   });
+// });
 
 let codeButton = document.querySelector(".code-button") as HTMLElement;
 codeButton.addEventListener("click", () => {

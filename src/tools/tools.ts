@@ -72,6 +72,8 @@ export class Tools {
                 src: ((creator.querySelector(".property-image") as HTMLInputElement).files as FileList)[0],
                 posX: +(creator.querySelector(".property-posX") as HTMLInputElement).value,
                 posY: +(creator.querySelector(".property-posY") as HTMLInputElement).value,
+                anchorX: +(creator.querySelector(".property-anchorX") as HTMLInputElement).value,
+                anchorY: +(creator.querySelector(".property-anchorY") as HTMLInputElement).value,
             })
         });
         return spriteLayouts;

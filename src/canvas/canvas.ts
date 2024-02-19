@@ -48,12 +48,12 @@ export class Canvas {
             const layout = layouts[i];
             const sprite = new PIXI.Sprite(PIXI.Texture.from(layout.src as PIXI.TextureSource));
             this.setFlipsToSprite(layout.flipX, layout.flipY, sprite);
-            this.setDimensionsToSprite(layout.width, layout.height, layout.zindex, layout.alpha, sprite);
+            this.setDimensionsToSprite({ alpha: layout.alpha, anchorX: layout.anchorX, anchorY: layout.anchorY, height: layout.height, id: i, posX: layout.posX, posY: layout.posY, width: layout.width, zindex: layout.zindex }, sprite);
             this.addListenerToSprite(sprite);
             this.pixiApp.stage.addChild(sprite);
             let spriteIndex = this.spriteProperties.findIndex(x => x.id == layout.id);
             if (spriteIndex == -1) {
-                this.spriteProperties.push({ id: layout.id, x: layout.posX ? layout.posX : layout.width / 2, y: layout.posY ? layout.posY : layout.height / 2, sprite: sprite });
+                this.spriteProperties.push({ id: layout.id, x: layout.posX, y: layout.posY, sprite: sprite });
             }
             this.spriteProperties[this.spriteProperties.findIndex(x => x.id == layout.id)].sprite = sprite;
             sprite.position.set(this.spriteProperties.find(x => x.id == layout.id)?.x, this.spriteProperties.find(x => x.id == layout.id)?.y);
@@ -71,7 +71,8 @@ export class Canvas {
                 parentWidth: this.pixiApp.renderer.width,
                 parentHeight: this.pixiApp.renderer.height,
                 position: sprite.position,
-                anchor: 0.5,
+                anchorX: sprite.anchor.x,
+                anchorY: sprite.anchor.y,
                 zIndex: sprite.zIndex,
                 scale: this.ratio,
                 alpha: sprite.alpha,
@@ -90,6 +91,8 @@ export class Canvas {
             sprite.alpha = info.alpha;
             sprite.position.x = info.posX;
             sprite.position.y = info.posY;
+            sprite.anchor.x = info.anchorX;
+            sprite.anchor.y = info.anchorY;
             spriteProps.x = info.posX;
             spriteProps.y = info.posY;
         }
@@ -126,8 +129,10 @@ export class Canvas {
 
     deleteSprite(id: number) {
         let spriteIndex = this.oldSprites.findIndex(x => x.id == id);
-        this.oldSprites[spriteIndex].sprite.destroy();
-        this.oldSprites.splice(spriteIndex, 1);
+        if (spriteIndex != -1) {
+            this.oldSprites[spriteIndex].sprite.destroy();
+            this.oldSprites.splice(spriteIndex, 1);
+        }
     }
 
     private deleteOldSprites() {
@@ -137,18 +142,18 @@ export class Canvas {
         this.oldSprites = [];
     }
 
-    private setDimensionsToSprite(width: number, height: number, zIndex: number, alpha: number, sprite: PIXI.Sprite) {
-        sprite.zIndex = zIndex;
-        sprite.alpha = alpha;
+    private setDimensionsToSprite(layout: UpdateSpriteLayout, sprite: PIXI.Sprite) {
+        sprite.zIndex = layout.zindex;
+        sprite.alpha = layout.alpha;
         if (this.ratio != 1) {
-            sprite.width = width * this.ratio;
-            sprite.height = height * this.ratio;
+            sprite.width = layout.width * this.ratio;
+            sprite.height = layout.height * this.ratio;
         } else {
-            sprite.width = width;
-            sprite.height = height;
+            sprite.width = layout.width;
+            sprite.height = layout.height;
         }
-        sprite.anchor.set(0.5);
-        sprite.position.set(width / 2, height / 2);
+        sprite.anchor.set(layout.anchorX, layout.anchorY);
+        sprite.position.set(layout.posX, layout.posY);
     }
 
     private setFlipsToSprite(flipX: boolean, flipY: boolean, sprite: PIXI.Sprite) {
@@ -210,10 +215,11 @@ export type SpriteLayout = {
     parentWidth: number,
     parentHeight: number,
     position: PIXI.Point,
-    anchor: number,
     zIndex: number,
     scale: number,
-    alpha: number
+    alpha: number,
+    anchorX: number,
+    anchorY: number,
 }
 
 export type PositionUpdater = {
